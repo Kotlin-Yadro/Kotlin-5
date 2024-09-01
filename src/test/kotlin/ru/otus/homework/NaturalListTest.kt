@@ -136,6 +136,43 @@ class NaturalListTest {
     }
 
     @Test
+    fun returnsValidSublistCornerCase1() {
+        val list = NaturalList(5)
+        val subList = list.subList(3, 1)
+        assertEquals(0, subList.size)
+    }
+
+    @Test
+    fun returnsValidSublistCornerCase2() {
+        val list = NaturalList(5)
+        val subList = list.subList(4, 5)
+        assertEquals(1, subList.size)
+        assertEquals(5, subList[0])
+    }
+
+    @Test
+    fun returnsValidSublistCornerCase3() {
+        val list = NaturalList(5)
+        val subList = list.subList(4, 10)
+        assertEquals(1, subList.size)
+        assertEquals(5, subList[0])
+    }
+
+    @Test
+    fun returnsValidSublistCornerCase4() {
+        val list = NaturalList(5)
+        val subList = list.subList(5, 4)
+        assertEquals(0, subList.size)
+    }
+
+    @Test
+    fun returnsValidSublistCornerCase5() {
+        val list = NaturalList(5)
+        val subList = list.subList(6, 7)
+        assertEquals(0, subList.size)
+    }
+
+    @Test
     fun returnsTrueIfListContainsAllNumbers() {
         val list = NaturalList(5)
         assertTrue(list.containsAll(listOf(1, 2, 3, 4, 5)))
@@ -168,6 +205,35 @@ class NaturalListTest {
         assertEquals(
             listOf(1, 2, 3, 4, 5).hashCode(),
             NaturalList(5).hashCode()
+        )
+    }
+
+    @Test
+    fun hashCodeOfEqualListNotEquals() {
+        assertNotEquals(
+            listOf(5, 4, 3, 2, 1).hashCode(),
+            NaturalList(5).hashCode()
+        )
+    }
+
+    @Test
+    fun equalsListTest1() {
+        assertFalse(
+            NaturalList(5) == listOf(5, 4, 3, 2, 1)
+        )
+    }
+
+    @Test
+    fun equalsListTest2() {
+        assertTrue(
+            NaturalList(5) == listOf(1, 2, 3, 4, 5)
+        )
+    }
+
+    @Test
+    fun equalsListTest3() {
+        assertFalse(
+            NaturalList(5).equals(listOf("1", "2", "3", "4", "5"))
         )
     }
 }
