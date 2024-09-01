@@ -1,5 +1,7 @@
 package ru.otus.homework
 
+import kotlin.math.min
+
 /**
  * Список натуральных чисел от 1 до n
  * @param n Последнее натуральное число в списке
@@ -34,15 +36,19 @@ class NaturalList(n: Int) : List<Int> {
     /**
      * Вернуть под-список этого списка, включая [fromIndex] и НЕ включая [toIndex]
      */
-    override fun subList(fromIndex: Int, toIndex: Int): List<Int> {
-        TODO("Not yet implemented")
-    }
+    override fun subList(fromIndex: Int, toIndex: Int): List<Int> =
+        if (fromIndex <= size) (fromIndex + 1..min(toIndex, size)).toList()
+        else listOf()
+
 
     /**
      * Returns true if list contains all numbers in the collection
      */
     override fun containsAll(elements: Collection<Int>): Boolean {
-        TODO("Not yet implemented")
+        elements.forEach {
+            if (it < 1 || it > size) return false
+        }
+        return true
     }
 
     override fun toString(): String {
@@ -53,13 +59,35 @@ class NaturalList(n: Int) : List<Int> {
      * Функция должна возвращать true, если сравнивается с другой реализацией списка тех же чисел
      * Например, NaturalList(5) должен быть равен listOf(1,2,3,4,5)
      */
-    override fun equals(other: Any?): Boolean = false
+    override fun equals(other: Any?): Boolean {
+        when (other) {
+            is NaturalList -> return other.size == size
+            is List<*> -> {
+                if (other.size != size) return false
+                for (i in 0 until size) {
+                  if (other[i] !is Int || other[i] != (i+1))
+                      return false
+                }
+                return true
+            }
+            else -> return false
+        }
+    }
 
     /**
      * Функция должна возвращать тот же hash-code, что и список другой реализации тех же чисел
      * Например, NaturalList(5).hashCode() должен быть равен listOf(1,2,3,4,5).hashCode()
      */
-    override fun hashCode(): Int = -1
+    // Это простой способ, но догадываюсь надо было посчитать самому
+    //override fun hashCode(): Int = subList(0, size + 1).hashCode()
+
+    override fun hashCode(): Int {
+        var hashCode = 1
+        for (i in 1..size) {
+            hashCode = hashCode * 31 + i
+        }
+        return hashCode
+    }
 }
 
 private class NaturalIterator(private val n: Int) : Iterator<Int> {
@@ -73,7 +101,7 @@ private class NaturalIterator(private val n: Int) : Iterator<Int> {
 }
 
 private class NaturalListIterator(private val n: Int, index: Int = 0) : ListIterator<Int> {
-    private var index:Int = index.coerceIn(0, n - 1)
+    private var index: Int = index.coerceIn(0, n - 1)
     override fun hasNext(): Boolean = index < n
     override fun hasPrevious(): Boolean = index > 0
     override fun next(): Int = if (hasNext()) {
@@ -81,11 +109,13 @@ private class NaturalListIterator(private val n: Int, index: Int = 0) : ListIter
     } else {
         throw NoSuchElementException()
     }
+
     override fun nextIndex(): Int = index
     override fun previous(): Int = if (hasPrevious()) {
         index--
     } else {
         throw NoSuchElementException()
     }
+
     override fun previousIndex(): Int = index
 }
