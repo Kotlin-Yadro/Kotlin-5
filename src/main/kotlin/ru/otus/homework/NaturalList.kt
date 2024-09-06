@@ -35,14 +35,20 @@ class NaturalList(n: Int) : List<Int> {
      * Вернуть под-список этого списка, включая [fromIndex] и НЕ включая [toIndex]
      */
     override fun subList(fromIndex: Int, toIndex: Int): List<Int> {
-        TODO("Not yet implemented")
+        val list = mutableListOf<Int>()
+        if (fromIndex > 0 && toIndex <= size && fromIndex < toIndex) {
+            for (i in fromIndex..< toIndex) {
+                list.add(get(i))
+            }
+        }
+        return list.toList()
     }
 
     /**
      * Returns true if list contains all numbers in the collection
      */
     override fun containsAll(elements: Collection<Int>): Boolean {
-        TODO("Not yet implemented")
+        return elements.all { contains(it) }
     }
 
     override fun toString(): String {
@@ -53,13 +59,43 @@ class NaturalList(n: Int) : List<Int> {
      * Функция должна возвращать true, если сравнивается с другой реализацией списка тех же чисел
      * Например, NaturalList(5) должен быть равен listOf(1,2,3,4,5)
      */
-    override fun equals(other: Any?): Boolean = false
+    override fun equals(other: Any?): Boolean {
+        if (other !is List<*>) {
+            return false
+        }
+
+        if (this !== other) {
+            // fast check of sizes
+            if (this.size != other.size) {
+                return false
+            }
+            val areNotEqual = this.asSequence()
+                .zip(other.asSequence())
+                // check this and other contains same elements at position
+                .map { (fromThis, fromOther) -> fromThis == fromOther }
+                // searching for first negative answer
+                .contains(false)
+
+            if (areNotEqual) {
+                return false
+            }
+        }
+        // collections are same, or they contain same elements with same order
+        return true
+    }
 
     /**
      * Функция должна возвращать тот же hash-code, что и список другой реализации тех же чисел
      * Например, NaturalList(5).hashCode() должен быть равен listOf(1,2,3,4,5).hashCode()
      */
-    override fun hashCode(): Int = -1
+    override fun hashCode(): Int {
+        var hashCode = 1
+        for (i in 0 until size) {
+            hashCode = 31 * hashCode + get(i).hashCode()
+        }
+
+        return hashCode
+    }
 }
 
 private class NaturalIterator(private val n: Int) : Iterator<Int> {
