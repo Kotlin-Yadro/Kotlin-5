@@ -2,6 +2,7 @@ package ru.otus.homework.persons
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.io.println
 
 class PersonsKtTest {
     private companion object {
@@ -24,6 +25,7 @@ class PersonsKtTest {
 
     @Test
     fun sortsByNames() {
+        println(persons.sortByName())
         assertEquals(
             listOf(P1, P2, P3, P4, P5),
             persons.sortByName()
