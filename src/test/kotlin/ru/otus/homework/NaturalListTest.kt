@@ -101,6 +101,50 @@ class NaturalListTest {
     }
 
     @Test
+    fun returnsValidSublistEdgeCase1() {
+        val list = NaturalList(6)
+        val subList = list.subList(4, 2)
+        assertEquals(0, subList.size)
+    }
+
+    @Test
+    fun returnsValidSublistEdgeCase2() {
+        val list = NaturalList(6)
+        val subList = list.subList(3, 9)
+        assertEquals(3, subList.size)
+        assertEquals(4, subList[0])
+    }
+
+    @Test
+    fun hashCodeOfEqualSizeListNotEquals() {
+        assertNotEquals(
+            listOf(1, 2, 4, 3, 5).hashCode(),
+            NaturalList(5).hashCode()
+        )
+    }
+
+    @Test
+    fun equalsListTestDirect() {
+        assertTrue(
+            NaturalList(8) == listOf(1, 2, 3, 4, 5, 6, 7, 8)
+        )
+    }
+
+    @Test
+    fun equalsListTestStrings() {
+        assertFalse(
+            NaturalList(8).equals(listOf("1", "2", "3", "4", "5", "6", "7", "8"))
+        )
+    }
+
+    @Test
+    fun equalsListTestReverse() {
+        assertFalse(
+            NaturalList(8) == listOf(8, 7, 6, 5, 4, 3, 2, 1)
+        )
+    }
+
+    @Test
     fun returnsIndexOfElementInRange() {
         val list = NaturalList(2)
         assertEquals(1, list.indexOf(2))
