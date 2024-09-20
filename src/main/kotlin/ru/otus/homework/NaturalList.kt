@@ -35,14 +35,23 @@ class NaturalList(n: Int) : List<Int> {
      * Вернуть под-список этого списка, включая [fromIndex] и НЕ включая [toIndex]
      */
     override fun subList(fromIndex: Int, toIndex: Int): List<Int> {
-        TODO("Not yet implemented")
+        if(fromIndex >= size || toIndex > size) throw IndexOutOfBoundsException("Check indexes")
+        return (fromIndex until toIndex).toList()
     }
 
     /**
      * Returns true if list contains all numbers in the collection
      */
     override fun containsAll(elements: Collection<Int>): Boolean {
-        TODO("Not yet implemented")
+        var amount = 0
+        elements.forEach {
+            if (it < 1 || it > size) {
+                return false
+            } else {
+                amount++
+            }
+        }
+        return (amount == elements.max())
     }
 
     override fun toString(): String {
@@ -53,13 +62,29 @@ class NaturalList(n: Int) : List<Int> {
      * Функция должна возвращать true, если сравнивается с другой реализацией списка тех же чисел
      * Например, NaturalList(5) должен быть равен listOf(1,2,3,4,5)
      */
-    override fun equals(other: Any?): Boolean = false
+    override fun equals(other: Any?): Boolean {
+        if(this === other) {
+            return true
+        } else if (other is List<*>){
+            if(this.size == other.size) {
+                return this.containsAll(other) && other.containsAll(this)
+            }
+            else return false
+        }
+        return false
+    }
 
     /**
      * Функция должна возвращать тот же hash-code, что и список другой реализации тех же чисел
      * Например, NaturalList(5).hashCode() должен быть равен listOf(1,2,3,4,5).hashCode()
      */
-    override fun hashCode(): Int = -1
+    override fun hashCode(): Int {
+        var hashCode = 1
+        for (element in this) {
+            hashCode = 31 * hashCode + element.hashCode()
+        }
+        return hashCode
+    }
 }
 
 private class NaturalIterator(private val n: Int) : Iterator<Int> {
